@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LTI Shim</title>
+  <script type="text/javascript" src="js/sha.js"></script> <!-- lib required for oauth signature generation -->
+</head>
+<body>
+<form action="" method="POST" target="tool_content" id="tool_form" style="display:block">
+        <input id="oauth_consumer_key" name="oauth_consumer_key" type="hidden" value="" />
+        <input id="oauth_signature_method" name="oauth_signature_method" type="hidden" value="" />
+        <input id="oauth_timestamp" name="oauth_timestamp" type="hidden" value="" />
+        <input id="oauth_nonce" name="oauth_nonce" type="hidden" value="" />
+        <input id="oauth_version" name="oauth_version" type="hidden" value="" />
+        <input id="context_id" name="context_id" type="hidden" value="" />
+        <input id="context_label" name="context_label" type="hidden" value="" />
+        <input id="context_title" name="context_title" type="hidden" value="" />
+        <input id="custom_canvas_api_domain" name="custom_canvas_api_domain" type="hidden" value="" />
+        <input id="custom_canvas_course_id" name="custom_canvas_course_id" type="hidden" value="" />
+        <input id="custom_canvas_enrollment_state" name="custom_canvas_enrollment_state" type="hidden" value="" />
+        <input id="custom_canvas_user_id" name="custom_canvas_user_id" type="hidden" value="" />
+        <input id="custom_canvas_user_login_id" name="custom_canvas_user_login_id" type="hidden" value="" />
+        <input id="ext_roles" name="ext_roles" type="hidden" value="" />
+        <input id="launch_presentation_document_target" name="launch_presentation_document_target" type="hidden" value="" />
+        <input id="launch_presentation_height" name="launch_presentation_height" type="hidden" value="" />
+        <input id="launch_presentation_locale" name="launch_presentation_locale" type="hidden" value="" />
+        <input id="launch_presentation_return_url" name="launch_presentation_return_url" type="hidden" value="" />
+        <input id="launch_presentation_width" name="launch_presentation_width" type="hidden" value="" />
+        <input id="lis_course_offering_sourcedid" name="lis_course_offering_sourcedid" type="hidden" value="" />
+        <input id="lis_person_contact_email_primary" name="lis_person_contact_email_primary" type="hidden" value="" />
+        <input id="lis_person_name_family" name="lis_person_name_family" type="hidden" value="" />
+        <input id="lis_person_name_full" name="lis_person_name_full" type="hidden" value="" />
+        <input id="lis_person_name_given" name="lis_person_name_given" type="hidden" value="" />
+        <input id="lis_person_sourcedid" name="lis_person_sourcedid" type="hidden" value="" />
+        <input id="lti_message_type" name="lti_message_type" type="hidden" value="" />
+        <input id="lti_version" name="lti_version" type="hidden" value="" />
+        <input id="oauth_callback" name="oauth_callback" type="hidden" value="" />
+        <input id="resource_link_id" name="resource_link_id" type="hidden" value="" />
+        <input id="resource_link_title" name="resource_link_title" type="hidden" value="" />
+        <input id="roles" name="roles" type="hidden" value="" />
+        <input id="tool_consumer_info_product_family_code" name="tool_consumer_info_product_family_code" type="hidden" value="" />
+        <input id="tool_consumer_info_version" name="tool_consumer_info_version" type="hidden" value="" />
+        <input id="tool_consumer_instance_contact_email" name="tool_consumer_instance_contact_email" type="hidden" value="" />
+        <input id="tool_consumer_instance_guid" name="tool_consumer_instance_guid" type="hidden" value="" />
+        <input id="tool_consumer_instance_name" name="tool_consumer_instance_name" type="hidden" value="" />
+        <input id="user_id" name="user_id" type="hidden" value="" />
+        <input id="user_image" name="user_image" type="hidden" value="" />
+        <input id="oauth_signature" name="oauth_signature" type="hidden" value="" />
+        <div style="margin-bottom: 10px">
+            <input type="submit" />
+            <button class="btn" id="load_tool_btn" type="submit">Load in a new window</button>
+        </div>
+</form>
+<div id="tool_content_container" style="height:100%">
+<iframe allowfullscreen="true" height="100%" id="tool_content" mozallowfullscreen="true" name="tool_content" src="about:blank" tabindex="0" title="Tool Content" webkitallowfullscreen="true" width="100%"></iframe>
+</div>
+
+<script>
+(function() {
+    var lti_consumer_key = "key";
+    var lti_consumer_secret = "secret";
+    var launch_url = 'https://localhost:3002/lti/launch';
+    var launch = {
+        "oauth_consumer_key": lti_consumer_key,
+        "oauth_signature_method": "HMAC-SHA1",
+        "oauth_timestamp": Date.now(),
+        "oauth_nonce": Math.floor(Math.random() * 1000000),
+        "oauth_version": "1.0",
+        "oauth_callback": "about:blank",
+        "oauth_signature": "",
+        "context_id": "d1ff50573dd9c6c1d08968057012116e7c7ac683",
+        "context_label": "demo-course",
+        "context_title": "Demo Course",
+        "custom_canvas_api_domain": "localhost",
+        "custom_canvas_course_id": "40",
+        "custom_canvas_enrollment_state": "active",
+        "custom_canvas_user_id": "123456",
+        "custom_canvas_user_login_id": "96b160c55a8acf4f225c8b395f9188cadc3acdbd",
+        "ext_roles": "urn:lti:instrole:ims/lis/Instructor,urn:lti:role:ims/lis/Instructor,urn:lti:sysrole:ims/lis/User",
+        "launch_presentation_document_target": "iframe",
+        "launch_presentation_height": "400",
+        "launch_presentation_locale": "en",
+        "launch_presentation_return_url": "https://canvas.harvard.edu/courses/40/external_content/success/external_tool_redirect",
+        "launch_presentation_width": "800",
+        "lis_course_offering_sourcedid": "lti-demo-course",
+        "lis_person_contact_email_primary": "",
+        "lis_person_name_family": "Instructor",
+        "lis_person_name_full": "Test Instructor",
+        "lis_person_name_given": "Test",
+        "lis_person_sourcedid": "12345678",
+        "lti_message_type": "basic-lti-launch-request",
+        "lti_version": "LTI-1p0",
+        "resource_link_id": "d7628c7a0544d8f068ea232b3d3b1af28f26dfcf",
+        "resource_link_title": "LTI Tool",
+        "roles": "Instructor",
+        "tool_consumer_info_product_family_code": "canvas",
+        "tool_consumer_info_version": "cloud",
+        "tool_consumer_instance_contact_email": "notifications@instructure.com",
+        "tool_consumer_instance_guid": "7db438071375c02373713c12c73869ff2f470b68.localhost",
+        "tool_consumer_instance_name": "LTI Shim",
+        "user_id": "cace4a159ff9f2512dd42373760608767b62855d",
+        "user_image": "https://secure.gravatar.com/avatar/000?s=50&d=https%3A%2F%2Fcanvas.instructure.com%2Fimages%2Fmessages%2Favatar-50.png"
+    };
+
+    // Setup Oauth
+    launch.oauth_signature = (function() {
+        var k, v, params_str, base_str;
+        var sha1, hmac;
+        var params = [];
+        var encodeParens = function(str) {
+            return str.replace(/\(/g, '%28').replace(/\)/g, '%29');
+        };
+
+        // collect parameters
+        for(k in launch) {
+            v = launch[k];
+            if (k !== "oauth_signature") {
+                params.push({key:k, value:v, encoded:encodeParens(encodeURIComponent(k)+"="+encodeURIComponent(v))});
+            }
+        }
+
+        // sort parameters lexicographically
+        params.sort(function(a, b) {
+            if (a.key < b.key) {
+                return -1;
+            } else if (a.key > b.key) {
+                return 1;
+            } else {
+                return (a.value < b.value) ? -1 : (a.value > b.value ? 1 : 0);
+            }
+        });
+        console.log(params.map(function(item) { return item.key+"="+item.value; }));
+        console.log(params.map(function(item) { return item.encoded; }));
+        console.log(params);
+
+        params_str = params.reduce(function(output, param) {
+            return output + "&" + param.encoded;
+        }, '');
+        params_str = params_str.substr(1); // strip leading "&"
+
+        // create the signature base string
+        base_str = ["POST", encodeURIComponent(launch_url), encodeURIComponent(params_str)].join("&");
+
+        sha1 = new jsSHA("SHA-1", "TEXT");
+        sha1.setHMACKey(encodeURIComponent(lti_consumer_secret)+"&", "TEXT");
+        sha1.update(base_str);
+        hmac = sha1.getHMAC("B64");
+        console.log("oauth base string", base_str);
+        console.log("oauth signature", hmac);
+        return hmac;
+    })();
+
+    // Setup form
+    (function() {
+        var el, k;
+        document.getElementById("tool_form").action = launch_url;
+        for(k in launch) {
+            document.getElementById(k).value = launch[k];
+            console.log("Setting", k, "=>", launch[k]);
+        }
+    })();
+
+    // Submit form
+    (function() {
+        var form = document.getElementById("tool_form");
+        var btn = document.getElementById("load_tool_btn");
+        var iframe = document.getElementById("tool_content");
+
+        iframe.onload = function() {
+            var h = Math.floor(.95 * window.innerHeight) + "px";
+            var el = document.getElementById("tool_content_container");
+            el.style.height = h;
+            console.log("Iframe height set to", h);
+        };
+
+        btn.onclick = function() {
+            console.log("Opening in a new window");
+            form.target = "_blank";
+            form.submit();
+        };
+
+        form.onsubmit = function() {
+            console.log("Form submitted.", form);
+        };
+
+        // Automatically submit form to load in the iframe
+        form.submit();
+    })();
+
+})();
+</script>
+</body>
+</html>
