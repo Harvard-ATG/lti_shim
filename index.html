@@ -46,6 +46,7 @@
         <input id="user_image" name="user_image" type="hidden" value="" />
         <input id="oauth_signature" name="oauth_signature" type="hidden" value="" />
         <div style="margin-bottom: 10px">
+            <input type="text" id="launch_url" name="launch_url" size="40" />
             <input type="submit" />
             <button class="btn" id="load_tool_btn" type="submit">Load in a new window</button>
         </div>
@@ -58,7 +59,9 @@
 (function() {
     var lti_consumer_key = "key";
     var lti_consumer_secret = "secret";
-    var launch_url = 'https://localhost:3002/lti/launch';
+    //var launch_url = 'https://localhost:3002/lti/launch';
+    var launch_url = window.localStorage.getItem('launch_url') || "http://localhost:8000/lti/launch";
+    document.getElementById('launch_url').value = launch_url;
     var launch = {
         "oauth_consumer_key": lti_consumer_key,
         "oauth_signature_method": "HMAC-SHA1",
@@ -179,6 +182,7 @@
         };
 
         form.onsubmit = function() {
+            window.localStorage.setItem('launch_url', document.getElementById("launch_url").value);
             console.log("Form submitted.", form);
         };
 
