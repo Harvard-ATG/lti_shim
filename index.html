@@ -46,11 +46,14 @@
         <input id="user_image" name="user_image" type="hidden" value="" />
         <input id="oauth_signature" name="oauth_signature" type="hidden" value="" />
         <div style="margin-bottom: 10px">
-            <input type="text" id="launch_url" name="launch_url" size="40" />
-            <input type="submit" />
+            <!-- <input type="submit" /> -->
             <button class="btn" id="load_tool_btn" type="submit">Load in a new window</button>
         </div>
 </form>
+<form id="launch_form">
+  <input type="text" id="launch_url" name="launch_url" size="40" />
+</form>
+
 <div id="tool_content_container" style="height:100%">
 <iframe allowfullscreen="true" height="100%" id="tool_content" mozallowfullscreen="true" name="tool_content" src="about:blank" tabindex="0" title="Tool Content" webkitallowfullscreen="true" width="100%"></iframe>
 </div>
@@ -59,7 +62,6 @@
 (function() {
     var lti_consumer_key = "key";
     var lti_consumer_secret = "secret";
-    //var launch_url = 'https://localhost:3002/lti/launch';
     var launch_url = window.localStorage.getItem('launch_url') || "http://localhost:8000/lti/launch";
     document.getElementById('launch_url').value = launch_url;
     var launch = {
@@ -182,9 +184,13 @@
         };
 
         form.onsubmit = function() {
-            window.localStorage.setItem('launch_url', document.getElementById("launch_url").value);
-            console.log("Form submitted.", form);
         };
+        document.getElementById('launch_form').onsubmit = function(){
+          launch_url = document.getElementById("launch_url").value;
+          window.localStorage.setItem('launch_url', launch_url);
+          location.reload();
+          return false;
+        }
 
         // Automatically submit form to load in the iframe
         form.submit();
